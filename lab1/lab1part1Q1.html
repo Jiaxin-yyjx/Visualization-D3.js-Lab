@@ -1,0 +1,100 @@
+<!-- CSE 5542 Lab1 part1: SVG -->
+<!-- Jiaxin Yang.5039@osu.edu -->
+
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Lab_1 Part_1</title>
+  </head>
+
+  <body>
+    <svg width="2000" height="500">
+      <title id="title">A bar chart showing population data</title>
+      <g class="bar">
+        <text x="0" y="10" dy=".35em">London</text>
+        <rect x="100" y="0" width="867.4" height="19" fill="blue"></rect>
+      </g>
+      <g class="bar">
+        <text x="0" y="40" dy=".35em">New York</text>
+        <rect x="100" y="30" width="840.6" height="19" fill="blue"></rect>
+      </g>
+      <g class="bar">
+        <text x="0" y="70" dy=".35em">Sydney</text>
+        <rect x="100" y="60" width="429.3" height="19" fill="blue"></rect>
+      </g>
+      <g class="bar">
+        <text x="0" y="100" dy=".35em">Paris</text>
+        <rect x="100" y="90" width="224.4" height="19" fill="blue"></rect>
+      </g>
+      <g class="bar">
+        <text x="0" y="130" dy=".35em">Beijing</text>
+        <rect x="100" y="120" width="1151" height="19" fill="blue"></rect>
+      </g>
+      <!-- Main line -->
+      <line
+        x1="100"
+        y1="140"
+        x2="1300"
+        y2="140"
+        style="stroke: rgb(0, 0, 0); stroke-width: 2"
+      />
+      <!-- Segments -->
+      <line
+        x1="100.5"
+        y1="140"
+        x2="100.5"
+        y2="150"
+        style="stroke: rgb(0, 0, 0); stroke-width: 1"
+      />
+      <text x="96" y="165">0</text>
+      <line
+        x1="300.5"
+        y1="140"
+        x2="300.5"
+        y2="150"
+        style="stroke: rgb(0, 0, 0); stroke-width: 1"
+      />
+      <text x="260" y="165">2,000,000</text>
+      <line
+        x1="500.5"
+        y1="140"
+        x2="500.5"
+        y2="150"
+        style="stroke: rgb(0, 0, 0); stroke-width: 1"
+      />
+      <text x="460" y="165">4,000,000</text>
+      <line
+        x1="700.5"
+        y1="140"
+        x2="700.5"
+        y2="150"
+        style="stroke: rgb(0, 0, 0); stroke-width: 1"
+      />
+      <text x="660" y="165">6,000,000</text>
+      <line
+        x1="900.5"
+        y1="140"
+        x2="900.5"
+        y2="150"
+        style="stroke: rgb(0, 0, 0); stroke-width: 1"
+      />
+      <text x="860" y="165">8,000,000</text>
+      <line
+        x1="1100.5"
+        y1="140"
+        x2="1100.5"
+        y2="150"
+        style="stroke: rgb(0, 0, 0); stroke-width: 1"
+      />
+      <text x="1057" y="165">10,000,000</text>
+      <line
+        x1="1300"
+        y1="140"
+        x2="1300"
+        y2="150"
+        style="stroke: rgb(0, 0, 0); stroke-width: 1"
+      />
+      <text x="1257›" y="165">12,000,000</text>
+    </svg>
+  </body>
+</html>
