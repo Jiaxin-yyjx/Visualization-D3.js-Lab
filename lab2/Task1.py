@@ -18,7 +18,14 @@ top3 = sum_Generation.set_index('ENERGY SOURCE').groupby('YEAR')['GENERATION (Me
 print(top3)
 
 # E: output a csv for year, energy source, and generation.
-tmp.to_csv('energy_YEG.csv', encoding='utf-8', index=False)
+tmp.to_csv('energy_YEG1.csv', encoding='utf-8', index=False)
+
+ohio_tmp = OH_data.loc[:,['YEAR','ENERGY SOURCE','GENERATION (Megawatthours)']]
+sumOH = ohio_tmp.loc[(ohio_tmp['ENERGY SOURCE'] != 'Total')].groupby(['YEAR','ENERGY SOURCE'], as_index=False).sum('GENERATION (Megawatthours)')
+top3OH = sumOH.set_index('ENERGY SOURCE').groupby('YEAR')['GENERATION (Megawatthours)'].nlargest(3).reset_index()
+print('top3OH')
+print(top3OH)
+top3OH.to_csv('energy_YEG.csv', encoding='utf-8', index=False)
 
 # F: ohio data, yearly sum.
 sum_GenerationOH = OH_data.loc[:,['YEAR','GENERATION (Megawatthours)']].groupby('YEAR', as_index=False).sum('GENERATION (Megawatthours)')
