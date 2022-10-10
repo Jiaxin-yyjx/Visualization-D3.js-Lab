@@ -37,7 +37,7 @@ print(sum_GenerationOH2)
 sum_GenerationOH2.to_csv('energyOH_PG.csv', encoding='utf-8', index=False)
 
 # The Stock Data:
-# A: read the stock datasets.
+# A: read the stock datasets. (From 01/03/2022 to 09/23/2022 for all 5 csv files.)
 aapl = pd.read_csv('AAPL.csv')
 amzn = pd.read_csv('AMZN.csv')
 googl = pd.read_csv('GOOGL.csv')
@@ -45,3 +45,24 @@ meta = pd.read_csv('META.csv')
 ndx = pd.read_csv('Nasdaq_100.csv')
 
 # B: 7 days average price
+avg_comp = pd.DataFrame()
+avg_comp['AAPL_moving_avg'] = aapl['Price'].rolling(7).mean()
+avg_comp['GOOGL_moving_avg'] = googl['Price'].rolling(7).mean()
+avg_comp['META_moving_avg'] = meta['Price'].rolling(7).mean()
+avg_comp['AMZN_moving_avg'] = amzn['Price'].rolling(7).mean()
+
+avg_comp.insert(0, 'Date', aapl.loc[:, 'Date'], True)
+print(avg_comp)
+
+# C: output a csv for 5 avg.
+avg_comp.to_csv('stock_avg.csv', encoding='utf-8', index=False)
+
+# D: output a csv for 6 prices.
+price_comp = pd.DataFrame()
+price_comp['Date'] = aapl['Date']
+price_comp['NDX_price'] = ndx['Price']
+price_comp['AAPL_price'] = aapl['Price']
+price_comp['GOOGL_price'] = googl['Price']
+price_comp['META_price'] = meta['Price']
+price_comp['AMZN_price'] = amzn['Price']
+price_comp.to_csv('stock_price.csv', encoding='utf-8', index=False)
