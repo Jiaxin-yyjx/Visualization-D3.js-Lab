@@ -59,6 +59,7 @@ avg_comp['META_moving_avg'] = meta['Price'].rolling(7).mean()
 avg_comp['AMZN_moving_avg'] = amzn['Price'].rolling(7).mean()
 
 avg_comp.insert(0, 'Date', aapl.loc[:, 'Date'], True)
+avg_comp.dropna(inplace=True)
 print(avg_comp)
 
 # C: output a csv for 5 avg.
@@ -72,4 +73,5 @@ price_comp['AAPL_price'] = aapl['Price']
 price_comp['GOOGL_price'] = googl['Price']
 price_comp['META_price'] = meta['Price']
 price_comp['AMZN_price'] = amzn['Price']
+print(price_comp)
 price_comp.to_csv('stock_price.csv', encoding='utf-8', index=False)

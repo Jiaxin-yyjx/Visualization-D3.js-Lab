@@ -1,0 +1,176 @@
+<!-- CSE 5542 Lab2 Task5: D3 scatter plot -->
+<!-- Jiaxin Yang.5039@osu.edu -->
+
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Lab_2 Task_5</title>
+    <!-- <script type="text/javascript" src="d3/d3.min.js"></script>  -->
+    <script src="https://d3js.org/d3.v4.min.js"></script>
+  </head>
+
+  <body>
+    <svg width="1000" height="1000"></svg>
+
+    <script type="text/javascript">
+      d3.csv("stock_price.csv", scatterPlot);
+
+      function scatterPlot(error, data) {
+        // Create the scale
+        var x = d3.scaleLinear().domain([10600, 17300]).range([100, 800]);
+        // Draw the axis
+        d3.select("svg")
+          .append("g")
+          .attr("transform", "translate(0,550)")
+          .call(d3.axisBottom(x).ticks(15))
+          .append("text")
+          .attr("fill", "black")
+          .attr("x", 850)
+          .style("font-size", "13px")
+          .attr("dy", "2.2em")
+          .attr("text-anchor", "end")
+          .text("Nasdaq 100 Price($)");
+
+        var y = d3.scaleLinear().domain([80, 350]).rangeRound([500, 0]);
+        d3.select("svg")
+          .append("g")
+          .attr("transform", "translate(100,50)")
+          .call(d3.axisLeft(y))
+          .append("text")
+          .attr("fill", "black")
+          .style("font-size", "13px")
+          .attr("dy", -8)
+          .attr("text-anchor", "end")
+          .text("Price ($)");
+
+        d3.select("svg")
+          .append("g")
+          .selectAll("dot")
+          .data(data)
+          .enter()
+          .append("circle")
+          .attr("cx", function (d) {
+            return x(d.NDX_price);
+          })
+          .attr("cy", function (d) {
+            return y(d.AAPL_price);
+          })
+          .attr("r", 2.5)
+          .style("fill", "#1f77b4")
+          .attr("transform", "translate(0,50)");
+
+        d3.select("svg")
+          .append("g")
+          .selectAll("dot")
+          .data(data)
+          .enter()
+          .append("circle")
+          .attr("cx", function (d) {
+            return x(d.NDX_price);
+          })
+          .attr("cy", function (d) {
+            return y(d.AMZN_price);
+          })
+          .attr("r", 2.5)
+          .style("fill", "#ff7f0e")
+          .attr("transform", "translate(0,50)");
+
+        d3.select("svg")
+          .append("g")
+          .selectAll("dot")
+          .data(data)
+          .enter()
+          .append("circle")
+          .attr("cx", function (d) {
+            return x(d.NDX_price);
+          })
+          .attr("cy", function (d) {
+            return y(d.GOOGL_price);
+          })
+          .attr("r", 2.5)
+          .style("fill", "#2ca02c")
+          .attr("transform", "translate(0,50)");
+
+        d3.select("svg")
+          .append("g")
+          .selectAll("dot")
+          .data(data)
+          .enter()
+          .append("circle")
+          .attr("cx", function (d) {
+            return x(d.NDX_price);
+          })
+          .attr("cy", function (d) {
+            return y(d.META_price);
+          })
+          .attr("r", 2.5)
+          .style("fill", "#d62728")
+          .attr("transform", "translate(0,50)");
+
+        d3.select("svg")
+          .append("g")
+          .append("circle")
+          .attr("cx", 150)
+          .attr("cy", 80)
+          .attr("r", 7)
+          .style("fill", "#1f77b4");
+        d3.select("svg")
+          .append("g")
+          .append("text")
+          .attr("x", 170)
+          .attr("y", 80)
+          .text("AAPL")
+          .style("font-size", "17px")
+          .attr("alignment-baseline", "middle");
+
+        d3.select("svg")
+          .append("g")
+          .append("circle")
+          .attr("cx", 150)
+          .attr("cy", 110)
+          .attr("r", 7)
+          .style("fill", "#ff7f0e");
+        d3.select("svg")
+          .append("g")
+          .append("text")
+          .attr("x", 170)
+          .attr("y", 110)
+          .text("AMZN")
+          .style("font-size", "17px")
+          .attr("alignment-baseline", "middle");
+
+        d3.select("svg")
+          .append("g")
+          .append("circle")
+          .attr("cx", 150)
+          .attr("cy", 140)
+          .attr("r", 7)
+          .style("fill", "#2ca02c");
+        d3.select("svg")
+          .append("g")
+          .append("text")
+          .attr("x", 170)
+          .attr("y", 140)
+          .text("GOOGL")
+          .style("font-size", "17px")
+          .attr("alignment-baseline", "middle");
+
+        d3.select("svg")
+          .append("g")
+          .append("circle")
+          .attr("cx", 150)
+          .attr("cy", 170)
+          .attr("r", 7)
+          .style("fill", "#d62728");
+        d3.select("svg")
+          .append("g")
+          .append("text")
+          .attr("x", 170)
+          .attr("y", 170)
+          .text("META")
+          .style("font-size", "17px")
+          .attr("alignment-baseline", "middle");
+      }
+    </script>
+  </body>
+</html>

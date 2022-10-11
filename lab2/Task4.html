@@ -1,0 +1,96 @@
+<!-- CSE 5542 Lab2 Task4 -->
+<!-- Jiaxin Yang.5039@osu.edu -->
+
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Lab_2 Task_4</title>
+    <!-- <script type="text/javascript" src="d3/d3.min.js"></script>  -->
+    <script src="https://d3js.org/d3.v4.min.js"></script>
+  </head>
+
+  <body>
+    <svg width="600" height="500"></svg>
+
+    <script type="text/javascript">
+      // Read the data
+      d3.csv(
+        "stock_avg.csv",
+        // When reading the csv, I must format variables:
+        function (d) {
+          return {
+            date: d3.timeParse("%m-%d-%Y")(d.Date),
+            price: d.AAPL_moving_avg,
+            // price2: d.GOOGL_moving_avg,
+            // price3: d.META_moving_avg,
+            // price4: d.AMZN_moving_avg,
+          };
+        },
+        lineGraph
+      );
+
+      function lineGraph(error, data) {
+        console.log(data);
+        var svg = d3.select("svg"),
+          margin = { top: 20, right: 20, bottom: 30, left: 50 },
+          width = +svg.attr("width") - margin.left - margin.right,
+          height = +svg.attr("height") - margin.top - margin.bottom,
+          g = svg
+            .append("g")
+            .attr(
+              "transform",
+              "translate(" + margin.left + "," + margin.top + ")"
+            );
+
+        var xScale = d3
+          .scaleTime()
+          .domain(
+            d3.extent(data, function (d) {
+              return d.date;
+            })
+          )
+          .rangeRound([0, width]);
+
+        var yScale = d3
+          .scaleLinear()
+          .domain(
+            d3.extent(data, function (d) {
+              return d.price;
+            })
+          )
+          .rangeRound([height, 0]);
+
+        var lineGenerator = d3
+          .line()
+          .x(function (d) {
+            return xScale(d.date);
+          })
+          .y(function (d) {
+            return yScale(d.price);
+          });
+
+        g.append("g")
+          .attr("transform", "translate(0," + height + ")")
+          .call(d3.axisBottom(xScale).ticks(8));
+
+        g.append("g")
+          .call(d3.axisLeft(yScale))
+          .append("text")
+          .attr("fill", "black")
+          .attr("transform", "rotate(-90)")
+          .attr("y", 13)
+          .attr("dy", "0.71em")
+          .attr("text-anchor", "end")
+          .text("Price ($)");
+
+        g.append("path")
+          .attr("fill", "none")
+          .attr("stroke", "steelblue")
+          .attr("stroke-width", 2)
+          .attr("stroke-linejoin", "round")
+          .attr("stroke-linecap", "round")
+          .attr("d", lineGenerator(data));
+      }
+    </script>
+  </body>
+</html>
