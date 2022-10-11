@@ -20,15 +20,16 @@ print(top3)
 # E: output a csv for year, energy source, and generation.
 tmp.to_csv('energy_YEG1.csv', encoding='utf-8', index=False)
 
-ohio_tmp = OH_data.loc[:,['YEAR','ENERGY SOURCE','GENERATION (Megawatthours)']]
-sumOH = ohio_tmp.loc[(ohio_tmp['ENERGY SOURCE'] != 'Total')].groupby(['YEAR','ENERGY SOURCE'], as_index=False).sum('GENERATION (Megawatthours)')
+ohio_tmp = OH_data.loc[:,['YEAR','ENERGY SOURCE','GENERATION (Megawatthours)', 'TYPE OF PRODUCER']]
+ohio_tmp = ohio_tmp.loc[(ohio_tmp['ENERGY SOURCE'] != 'Total') & (ohio_tmp['TYPE OF PRODUCER'] != 'Total Electric Power Industry')]
+sumOH = ohio_tmp.groupby(['YEAR','ENERGY SOURCE'], as_index=False).sum('GENERATION (Megawatthours)')
 top3OH = sumOH.set_index('ENERGY SOURCE').groupby('YEAR')['GENERATION (Megawatthours)'].nlargest(3).reset_index()
 print('top3OH')
 print(top3OH)
 top3OH.to_csv('energy_YEG.csv', encoding='utf-8', index=False)
 
 # F: ohio data, yearly sum.
-sum_GenerationOH = OH_data.loc[:,['YEAR','GENERATION (Megawatthours)']].groupby('YEAR', as_index=False).sum('GENERATION (Megawatthours)')
+sum_GenerationOH = ohio_tmp.groupby('YEAR', as_index=False).sum('GENERATION (Megawatthours)')
 sum_GenerationOH = sum_GenerationOH.rename({'GENERATION (Megawatthours)': 'TOTAL_GENERATION'}, axis=1) 
 print(sum_GenerationOH)
 
@@ -36,8 +37,9 @@ print(sum_GenerationOH)
 sum_GenerationOH.to_csv('energyOH_YG.csv', encoding='utf-8', index=False)
 
 # H: ohio data, sum of generation based on type of producer.
-tmp2 = OH_data.loc[:,['TYPE OF PRODUCER','GENERATION (Megawatthours)']]
-sum_GenerationOH2 = tmp2.loc[df['TYPE OF PRODUCER']!='Total Electric Power Industry'].groupby('TYPE OF PRODUCER', as_index=False).sum('GENERATION (Megawatthours)')
+# tmp2 = OH_data.loc[:,['TYPE OF PRODUCER','GENERATION (Megawatthours)']]
+# sum_GenerationOH2 = tmp2.loc[df['TYPE OF PRODUCER']!='Total Electric Power Industry'].groupby('TYPE OF PRODUCER', as_index=False).sum('GENERATION (Megawatthours)')
+sum_GenerationOH2 = ohio_tmp.groupby('TYPE OF PRODUCER', as_index=False).sum('GENERATION (Megawatthours)')
 print(sum_GenerationOH2)
 
 # I: output a csv for type of producer, generation.

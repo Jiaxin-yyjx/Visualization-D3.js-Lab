@@ -1,6 +1,6 @@
-TYPE OF PRODUCER,GENERATION (Megawatthours)
-"Combined Heat and Power, Commercial Power",2446571.0
-"Combined Heat and Power, Electric Power",11943469.0
-"Combined Heat and Power, Industrial Power",7025664.0
-"Electric Generators, Electric Utilities",157682735.0
-"Electric Generators, Independent Power Producers",1041038450.0
+TYPE OF PRODUCER,YEAR,GENERATION (Megawatthours)
+"Combined Heat and Power, Commercial Power",726840,1223287.0
+"Combined Heat and Power, Electric Power",533052,5971736.0
+"Combined Heat and Power, Industrial Power",1090260,3512833.0
+"Electric Generators, Electric Utilities",969120,78841367.0
+"Electric Generators, Independent Power Producers",1094302,520519224.0

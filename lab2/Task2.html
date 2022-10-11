@@ -12,82 +12,164 @@
   </head>
 
   <body>
-    <svg width="3000" height="3000"></svg>
+    <svg width="1000" height="1000"></svg>
 
     <script type="text/javascript">
       d3.csv("energy_YEG.csv", BarChart);
 
       function BarChart(error, energy) {
-        var fontSize = 13;
-        var width = 50;
-        var height = 400;
-
-        var svg = d3.select("svg");
-        var cityNames = cities.map(function (c) {
-          return c.city;
+        var data = [];
+        energy.forEach((each_data) => {
+          const i = data.findIndex((e) => e.YEAR === each_data.YEAR);
+          if (i > -1) {
+            data[i][each_data["ENERGY SOURCE"]] =
+              each_data["GENERATION (Megawatthours)"];
+          } else {
+            let key = "" + each_data["ENERGY SOURCE"];
+            let value = each_data["GENERATION (Megawatthours)"];
+            let obj = {};
+            obj["YEAR"] = each_data.YEAR;
+            obj[key] = value;
+            data.push(obj);
+          }
         });
+        
+        var subgroups = ["Coal", "Natural Gas", "Nuclear"];
+        var years = d3
+          .map(data, function (d) {
+            return d.YEAR;
+          })
+          .keys();
 
-        var bandScale = d3
-          .scaleBand()
-          .domain(cityNames)
-          .range([60, height])
-          .paddingOuter(0.33)
-          .paddingInner(0.33);
-
-        var pop2width = d3
-          .scaleLinear()
-          .domain([0, 1.2 * 1e7])
-          .range([0, height]);
-
-        var pop = d3
-          .scaleLinear()
-          .domain([0, 1.2 * 1e7])
-          .range([height, 0]);
-
-        var xAxis = d3.axisLeft(pop).ticks(6);
-
-        svg
+        // Add X axis
+        var x = d3.scaleBand().domain(years).range([0, 500]).padding([0.2])
+        d3.select("svg").append("g").attr("transform", "translate(100, 500)").call(d3.axisBottom(x).ticks(7));
+ 
+        // Add Y axis
+        var y = d3.scaleLinear().domain([0, 150000000]).rangeRound([450, 0]);
+        d3.select("svg")
           .append("g")
-          .classed("axis", true)
-          .attr("transform", "translate(80, " + width + ")")
-          .call(xAxis);
-
-        var barChartG = svg.append("g").attr("id", "bar-chart");
-
-        var texts = barChartG
-          .append("g")
-          .selectAll("text")
-          .data(cities)
-          .enter()
+          .attr("transform", "translate(100,50)")
+          .call(d3.axisLeft(y).ticks(4))
           .append("text")
-          .attr("x", function (d, i) {
-            return bandScale(d.city);
-          })
-          .attr("y", 455)
-          .attr("font-size", fontSize)
-          // set anchor and alignment for texts
-          .attr("text-anchor", "start")
-          .attr("alignment-baseline", "hanging")
-          .text(function (d) {
-            return d.city;
-          });
+          .attr("fill", "black")
+          .style("font-size", "13px")
+          .attr("dy", -8)
+          .attr("dx", 97)
+          .attr("text-anchor", "end")
+          .text("Generation(Megawatthours)");
 
-        var rects = barChartG
-          .selectAll("rect")
-          .data(cities)
-          .enter()
-          .append("rect")
-          .attr("x", function (d) {
-            return bandScale(d.city);
-          })
-          .attr("y", function (d, i) {
-            return pop(d.population) + width;
-          })
-          .attr("height", function (d, i) {
-            return pop2width(d.population);
-          })
-          .attr("width", bandScale.bandwidth())
-          .style("fill", "steelblue");
+          var color = d3.scaleOrdinal().domain(subgroups).range(['#1f77b4','#ff7f0e','#2ca02c'])
+          var stackedData = d3.stack().keys(subgroups)(data)
+          console.log(stackedData)
+          // Show the bars
+          d3.select("svg").append("g")
+              .selectAll("g")
+    // Enter in the stack data = loop key per key = group per group
+    .data(stackedData)
+    .enter().append("g")
+      .attr("fill", function(d) { return color(d.key); })
+      .selectAll("rect")
+      // enter a second time = loop subgroup per subgroup to add all rectangles
+      .data(function(d) { return d; })
+      .enter().append("rect")
+        .attr("x", function(d) { return x(d.data.YEAR); })
+        .attr("y", function(d) { return y(d[1]); })
+        .attr("height", function(d) { return y(d[0]) - y(d[1]); })
+        .attr("width",x.bandwidth()-30)
+        .attr("transform", "translate(115, 50)")
+
+        d3.select("svg")
+          .append("circle")
+          .attr("cx", 600)
+          .attr("cy", 60)
+          .attr("r", 6)
+          .style("fill", "#1f77b4");
+        d3.select("svg")
+          .append("text")
+          .attr("x", 620)
+          .attr("y", 60)
+          .text("Coal")
+          .style("font-size", "16px")
+          .attr("alignment-baseline", "middle");
+
+          d3.select("svg")
+          .append("circle")
+          .attr("cx", 600)
+          .attr("cy", 90)
+          .attr("r", 6)
+          .style("fill", "#ff7f0e");
+        d3.select("svg")
+          .append("text")
+          .attr("x", 620)
+          .attr("y", 90)
+          .text("Natural Gas")
+          .style("font-size", "16px")
+          .attr("alignment-baseline", "middle");
+
+          d3.select("svg")
+          .append("circle")
+          .attr("cx", 600)
+          .attr("cy", 120)
+          .attr("r", 6)
+          .style("fill", "#2ca02c");
+        d3.select("svg")
+          .append("text")
+          .attr("x", 620)
+          .attr("y", 120)
+          .text("Nuclear")
+          .style("font-size", "16px")
+          .attr("alignment-baseline", "middle");
+
+          d3.select("svg")
+          .append("line")
+          .attr("x1", 590)
+          .attr("y1", 150)  
+          .attr("x2", 610)
+          .attr("y2", 150)
+          .style('stroke-width', 2.5)
+          .style("stroke", "steelblue");
+        d3.select("svg")
+          .append("text")
+          .attr("x", 620)
+          .attr("y", 150)
+          .text("Total Generation")
+          .style("font-size", "16px")
+          .attr("alignment-baseline", "middle");
+      }
+
+
+      d3.csv("energyOH_YG.csv", lineChart);
+
+      function lineChart(error, data) {
+        var xScale = d3
+          .scaleTime()
+          .domain(
+            d3.extent(data, function (d) {
+              return d['YEAR'];
+            })
+          )
+          .rangeRound([0, 500]);
+
+        var yScale = d3
+          .scaleLinear()
+          .domain(
+            d3.extent(data, function (d) {
+              return d.TOTAL_GENERATION;
+            })
+          )
+          .rangeRound([450, 0]);
+          
+          d3.select("svg").append("path")
+      .datum(data)
+      .attr("fill", "none")
+      .attr("stroke", "steelblue")
+      .attr("stroke-width", 2)
+      .attr("d", d3.line()
+        .x(function(d) { return xScale(d.YEAR) })
+        .y(function(d) { return yScale(d.TOTAL_GENERATION)*0.04 })
+        )
+        .attr("transform", "translate(155,120), scale(0.77,1)")
       }
     </script>
   </body>

@@ -10,7 +10,7 @@
   </head>
 
   <body>
-    <svg width="600" height="500"></svg>
+    <svg width="1000" height="1000"></svg>
 
     <script type="text/javascript">
       // Read the data
@@ -30,66 +30,37 @@
       );
 
       function lineGraph(error, data) {
-        console.log(data);
-        var svg = d3.select("svg"),
-          margin = { top: 20, right: 20, bottom: 30, left: 50 },
-          width = +svg.attr("width") - margin.left - margin.right,
-          height = +svg.attr("height") - margin.top - margin.bottom,
-          g = svg
-            .append("g")
-            .attr(
-              "transform",
-              "translate(" + margin.left + "," + margin.top + ")"
-            );
+      
+        var x = d3.scaleLinear().domain([10600, 17300]).range([100, 800]);
+        d3.select("svg")
+          .append("g")
+          .attr("transform", "translate(0,550)")
+          .call(d3.axisBottom(x).ticks(15));
 
-        var xScale = d3
-          .scaleTime()
-          .domain(
-            d3.extent(data, function (d) {
-              return d.date;
-            })
-          )
-          .rangeRound([0, width]);
-
-        var yScale = d3
-          .scaleLinear()
-          .domain(
-            d3.extent(data, function (d) {
-              return d.price;
-            })
-          )
-          .rangeRound([height, 0]);
-
-        var lineGenerator = d3
-          .line()
-          .x(function (d) {
-            return xScale(d.date);
-          })
-          .y(function (d) {
-            return yScale(d.price);
-          });
-
-        g.append("g")
-          .attr("transform", "translate(0," + height + ")")
-          .call(d3.axisBottom(xScale).ticks(8));
-
-        g.append("g")
-          .call(d3.axisLeft(yScale))
+        var y = d3.scaleLinear().domain([80, 350]).rangeRound([500, 0]);
+        d3.select("svg")
+          .append("g")
+          .attr("transform", "translate(100,50)")
+          .call(d3.axisLeft(y))
           .append("text")
           .attr("fill", "black")
-          .attr("transform", "rotate(-90)")
-          .attr("y", 13)
-          .attr("dy", "0.71em")
+          .style("font-size", "13px")
+          .attr("dy", -8)
           .attr("text-anchor", "end")
           .text("Price ($)");
 
-        g.append("path")
-          .attr("fill", "none")
-          .attr("stroke", "steelblue")
-          .attr("stroke-width", 2)
-          .attr("stroke-linejoin", "round")
-          .attr("stroke-linecap", "round")
-          .attr("d", lineGenerator(data));
+        // Add the line
+        d3.select("svg").append("path")
+      .datum(data)
+      .attr("fill", "none")
+      .attr("stroke", "steelblue")
+      .attr("stroke-width", 2)
+      .attr("d", d3.line()
+        .x(function(d) { return x(d.date) })
+        .y(function(d) { return y(d.price) })
+        )
+        .attr("transform", "translate(90,100)")
+
       }
     </script>
   </body>
