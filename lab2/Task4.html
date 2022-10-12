@@ -16,21 +16,13 @@
       // Read the data
       d3.csv(
         "stock_avg.csv",
-        // When reading the csv, I must format variables:
-        function (d) {
-          return {
-            date: d3.timeParse("%m-%d-%Y")(d.Date),
-            price: d.AAPL_moving_avg,
-            // price2: d.GOOGL_moving_avg,
-            // price3: d.META_moving_avg,
-            // price4: d.AMZN_moving_avg,
-          };
-        },
+      
         lineGraph
       );
 
       function lineGraph(error, data) {
-      
+      console.log(data)
+      d3.timeParse("%m/%d/%Y")(d.Date)
         var x = d3.scaleLinear().domain([10600, 17300]).range([100, 800]);
         d3.select("svg")
           .append("g")
