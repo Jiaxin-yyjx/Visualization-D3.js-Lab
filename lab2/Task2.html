@@ -33,7 +33,7 @@
             data.push(obj);
           }
         });
-        
+
         var subgroups = ["Coal", "Natural Gas", "Nuclear"];
         var years = d3
           .map(data, function (d) {
@@ -42,9 +42,12 @@
           .keys();
 
         // Add X axis
-        var x = d3.scaleBand().domain(years).range([0, 500]).padding([0.2])
-        d3.select("svg").append("g").attr("transform", "translate(100, 500)").call(d3.axisBottom(x).ticks(7));
- 
+        var x = d3.scaleBand().domain(years).range([0, 500]).padding([0.2]);
+        d3.select("svg")
+          .append("g")
+          .attr("transform", "translate(100, 500)")
+          .call(d3.axisBottom(x).ticks(7));
+
         // Add Y axis
         var y = d3.scaleLinear().domain([0, 150000000]).rangeRound([450, 0]);
         d3.select("svg")
@@ -59,25 +62,41 @@
           .attr("text-anchor", "end")
           .text("Generation(Megawatthours)");
 
-          var color = d3.scaleOrdinal().domain(subgroups).range(['#1f77b4','#ff7f0e','#2ca02c'])
-          var stackedData = d3.stack().keys(subgroups)(data)
-          console.log(stackedData)
-          // Show the bars
-          d3.select("svg").append("g")
-              .selectAll("g")
-    // Enter in the stack data = loop key per key = group per group
-    .data(stackedData)
-    .enter().append("g")
-      .attr("fill", function(d) { return color(d.key); })
-      .selectAll("rect")
-      // enter a second time = loop subgroup per subgroup to add all rectangles
-      .data(function(d) { return d; })
-      .enter().append("rect")
-        .attr("x", function(d) { return x(d.data.YEAR); })
-        .attr("y", function(d) { return y(d[1]); })
-        .attr("height", function(d) { return y(d[0]) - y(d[1]); })
-        .attr("width",x.bandwidth()-30)
-        .attr("transform", "translate(115, 50)")
+        var color = d3
+          .scaleOrdinal()
+          .domain(subgroups)
+          .range(["#1f77b4", "#ff7f0e", "#2ca02c"]);
+        var stackedData = d3.stack().keys(subgroups)(data);
+        console.log(stackedData);
+        // Show the bars
+        d3.select("svg")
+          .append("g")
+          .selectAll("g")
+          // Enter in the stack data = loop key per key = group per group
+          .data(stackedData)
+          .enter()
+          .append("g")
+          .attr("fill", function (d) {
+            return color(d.key);
+          })
+          .selectAll("rect")
+          // enter a second time = loop subgroup per subgroup to add all rectangles
+          .data(function (d) {
+            return d;
+          })
+          .enter()
+          .append("rect")
+          .attr("x", function (d) {
+            return x(d.data.YEAR);
+          })
+          .attr("y", function (d) {
+            return y(d[1]);
+          })
+          .attr("height", function (d) {
+            return y(d[0]) - y(d[1]);
+          })
+          .attr("width", x.bandwidth() - 30)
+          .attr("transform", "translate(115, 50)");
 
         d3.select("svg")
           .append("circle")
@@ -93,7 +112,7 @@
           .style("font-size", "16px")
           .attr("alignment-baseline", "middle");
 
-          d3.select("svg")
+        d3.select("svg")
           .append("circle")
           .attr("cx", 600)
           .attr("cy", 90)
@@ -107,7 +126,7 @@
           .style("font-size", "16px")
           .attr("alignment-baseline", "middle");
 
-          d3.select("svg")
+        d3.select("svg")
           .append("circle")
           .attr("cx", 600)
           .attr("cy", 120)
@@ -121,13 +140,13 @@
           .style("font-size", "16px")
           .attr("alignment-baseline", "middle");
 
-          d3.select("svg")
+        d3.select("svg")
           .append("line")
           .attr("x1", 590)
-          .attr("y1", 150)  
+          .attr("y1", 150)
           .attr("x2", 610)
           .attr("y2", 150)
-          .style('stroke-width', 2.5)
+          .style("stroke-width", 2.5)
           .style("stroke", "steelblue");
         d3.select("svg")
           .append("text")
@@ -138,7 +157,6 @@
           .attr("alignment-baseline", "middle");
       }
 
-
       d3.csv("energyOH_YG.csv", lineChart);
 
       function lineChart(error, data) {
@@ -146,7 +164,7 @@
           .scaleTime()
           .domain(
             d3.extent(data, function (d) {
-              return d['YEAR'];
+              return d["YEAR"];
             })
           )
           .rangeRound([0, 500]);
@@ -159,17 +177,25 @@
             })
           )
           .rangeRound([450, 0]);
-          
-          d3.select("svg").append("path")
-      .datum(data)
-      .attr("fill", "none")
-      .attr("stroke", "steelblue")
-      .attr("stroke-width", 2)
-      .attr("d", d3.line()
-        .x(function(d) { return xScale(d.YEAR) })
-        .y(function(d) { return yScale(d.TOTAL_GENERATION)*0.04 })
-        )
-        .attr("transform", "translate(155,120), scale(0.77,1)")
+
+        d3.select("svg")
+          .append("path")
+          .datum(data)
+          .attr("fill", "none")
+          .attr("stroke", "steelblue")
+          .attr("stroke-width", 2)
+          .attr(
+            "d",
+            d3
+              .line()
+              .x(function (d) {
+                return xScale(d.YEAR);
+              })
+              .y(function (d) {
+                return yScale(d.TOTAL_GENERATION) * 0.04;
+              })
+          )
+          .attr("transform", "translate(155,120), scale(0.77,1)");
       }
     </script>
   </body>

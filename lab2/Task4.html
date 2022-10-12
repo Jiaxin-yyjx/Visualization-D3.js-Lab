@@ -1,4 +1,4 @@
-<!-- CSE 5542 Lab2 Task4 -->
+<!-- CSE 5542 Lab2 Task4: Stock data - D3 line chart -->
 <!-- Jiaxin Yang.5039@osu.edu -->
 
 <!DOCTYPE html>
@@ -14,16 +14,20 @@
 
     <script type="text/javascript">
       // Read the data
-      d3.csv(
-        "stock_avg.csv",
-      
-        lineGraph
-      );
+      d3.csv("stock_avg.csv", lineGraph);
 
       function lineGraph(error, data) {
-      console.log(data)
-      d3.timeParse("%m/%d/%Y")(d.Date)
-        var x = d3.scaleLinear().domain([10600, 17300]).range([100, 800]);
+        const format = d3.timeFormat("%m/%d/%Y");
+        const newDate = format(data.Date);
+        console.log(newDate);
+        var x = d3
+          .scaleLinear()
+          .domain(
+            d3.extent(data, function (d) {
+              return d.Date;
+            })
+          )
+          .range([100, 800]);
         d3.select("svg")
           .append("g")
           .attr("transform", "translate(0,550)")
@@ -42,17 +46,24 @@
           .text("Price ($)");
 
         // Add the line
-        d3.select("svg").append("path")
-      .datum(data)
-      .attr("fill", "none")
-      .attr("stroke", "steelblue")
-      .attr("stroke-width", 2)
-      .attr("d", d3.line()
-        .x(function(d) { return x(d.date) })
-        .y(function(d) { return y(d.price) })
-        )
-        .attr("transform", "translate(90,100)")
-
+        d3.select("svg")
+          .append("path")
+          .datum(data)
+          .attr("fill", "none")
+          .attr("stroke", "steelblue")
+          .attr("stroke-width", 2)
+          .attr(
+            "d",
+            d3
+              .line()
+              .x(function (d) {
+                return x(d.date);
+              })
+              .y(function (d) {
+                return y(d.price);
+              })
+          )
+          .attr("transform", "translate(90,100)");
       }
     </script>
   </body>
