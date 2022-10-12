@@ -17,11 +17,13 @@
       d3.csv("stock_avg.csv", lineGraph);
 
       function lineGraph(error, data) {
-        const format = d3.timeFormat("%m/%d/%Y");
-        const newDate = format(data.Date);
-        console.log(newDate);
-        var x = d3
-          .scaleLinear()
+        const format = d3.timeParse("%m/%d/%Y");
+        data.forEach(function (d) {
+          d.Date = format(d.Date);
+        });
+
+        var xScale = d3
+          .scaleTime()
           .domain(
             d3.extent(data, function (d) {
               return d.Date;
@@ -31,13 +33,13 @@
         d3.select("svg")
           .append("g")
           .attr("transform", "translate(0,550)")
-          .call(d3.axisBottom(x).ticks(15));
+          .call(d3.axisBottom(xScale).ticks(10));
 
-        var y = d3.scaleLinear().domain([80, 350]).rangeRound([500, 0]);
+        var yScale = d3.scaleLinear().domain([80, 350]).rangeRound([500, 0]);
         d3.select("svg")
           .append("g")
           .attr("transform", "translate(100,50)")
-          .call(d3.axisLeft(y))
+          .call(d3.axisLeft(yScale))
           .append("text")
           .attr("fill", "black")
           .style("font-size", "13px")
@@ -46,24 +48,146 @@
           .text("Price ($)");
 
         // Add the line
+        var lineGenerator = d3
+          .line()
+          .x(function (d) {
+            return xScale(d.Date);
+          })
+          .y(function (d) {
+            return yScale(d.AAPL_moving_avg);
+          });
         d3.select("svg")
+          .append("g")
           .append("path")
-          .datum(data)
           .attr("fill", "none")
-          .attr("stroke", "steelblue")
+          .attr("stroke", "#1f77b4")
           .attr("stroke-width", 2)
-          .attr(
-            "d",
-            d3
-              .line()
-              .x(function (d) {
-                return x(d.date);
-              })
-              .y(function (d) {
-                return y(d.price);
-              })
-          )
-          .attr("transform", "translate(90,100)");
+          .attr("stroke-linejoin", "round")
+          .attr("stroke-linecap", "round")
+          .attr("d", lineGenerator(data))
+          .attr("transform", "translate(0,40)");
+
+        var lineGenerator1 = d3
+          .line()
+          .x(function (d) {
+            return xScale(d.Date);
+          })
+          .y(function (d) {
+            return yScale(d.AMZN_moving_avg);
+          });
+        d3.select("svg")
+          .append("g")
+          .append("path")
+          .attr("fill", "none")
+          .attr("stroke", "#ff7f0e")
+          .attr("stroke-width", 2)
+          .attr("stroke-linejoin", "round")
+          .attr("stroke-linecap", "round")
+          .attr("d", lineGenerator1(data))
+          .attr("transform", "translate(0,40)");
+
+        var lineGenerator2 = d3
+          .line()
+          .x(function (d) {
+            return xScale(d.Date);
+          })
+          .y(function (d) {
+            return yScale(d.GOOGL_moving_avg);
+          });
+        d3.select("svg")
+          .append("g")
+          .append("path")
+          .attr("fill", "none")
+          .attr("stroke", "#2ca02c")
+          .attr("stroke-width", 2)
+          .attr("stroke-linejoin", "round")
+          .attr("stroke-linecap", "round")
+          .attr("d", lineGenerator2(data))
+          .attr("transform", "translate(0,40)");
+
+        var lineGenerator3 = d3
+          .line()
+          .x(function (d) {
+            return xScale(d.Date);
+          })
+          .y(function (d) {
+            return yScale(d.META_moving_avg);
+          });
+        d3.select("svg")
+          .append("g")
+          .append("path")
+          .attr("fill", "none")
+          .attr("stroke", "#d62728")
+          .attr("stroke-width", 2)
+          .attr("stroke-linejoin", "round")
+          .attr("stroke-linecap", "round")
+          .attr("d", lineGenerator3(data))
+          .attr("transform", "translate(0,40)");
+
+        // legend
+        d3.select("svg")
+          .append("g")
+          .append("circle")
+          .attr("cx", 700)
+          .attr("cy", 80)
+          .attr("r", 7)
+          .style("fill", "#1f77b4");
+        d3.select("svg")
+          .append("g")
+          .append("text")
+          .attr("x", 720)
+          .attr("y", 80)
+          .text("AAPL")
+          .style("font-size", "17px")
+          .attr("alignment-baseline", "middle");
+
+        d3.select("svg")
+          .append("g")
+          .append("circle")
+          .attr("cx", 700)
+          .attr("cy", 110)
+          .attr("r", 7)
+          .style("fill", "#ff7f0e");
+        d3.select("svg")
+          .append("g")
+          .append("text")
+          .attr("x", 720)
+          .attr("y", 110)
+          .text("AMZN")
+          .style("font-size", "17px")
+          .attr("alignment-baseline", "middle");
+
+        d3.select("svg")
+          .append("g")
+          .append("circle")
+          .attr("cx", 700)
+          .attr("cy", 140)
+          .attr("r", 7)
+          .style("fill", "#2ca02c");
+        d3.select("svg")
+          .append("g")
+          .append("text")
+          .attr("x", 720)
+          .attr("y", 140)
+          .text("GOOGL")
+          .style("font-size", "17px")
+          .attr("alignment-baseline", "middle");
+
+        d3.select("svg")
+          .append("g")
+          .append("circle")
+          .attr("cx", 700)
+          .attr("cy", 170)
+          .attr("r", 7)
+          .style("fill", "#d62728");
+        d3.select("svg")
+          .append("g")
+          .append("text")
+          .attr("x", 720)
+          .attr("y", 170)
+          .text("META")
+          .style("font-size", "17px")
+          .attr("alignment-baseline", "middle");
       }
     </script>
   </body>
