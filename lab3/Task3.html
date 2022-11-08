@@ -7,108 +7,78 @@
     <title>Lab_3 Task_2</title>
     <!-- <script type="text/javascript" src="d3/d3.min.js"></script>  -->
     <script src="https://d3js.org/d3.v4.min.js"></script>
+    <script src="https://d3js.org/d3-scale-chromatic.v1.min.js"></script>
   </head>
 
   <body>
     <svg width="1000" height="1000"></svg>>
 
     <script type="text/javascript">
-      d3.csv("energyOH_PG.csv", pieChart);
+      var data = d3.map();
+      
+      d3.queue()
+  .defer(d3.json, "us-states.json")
+  .defer(d3.csv, "state_Gen.csv", function(d) { data.set(d.STATE, +d.GENERATION); })
+  .await(map);
 
-      function pieChart(error, typePro) {
-        var pieGenerator = d3
-          .pie()
-          .value(function (d) {
-            return d["GENERATION (Megawatthours)"];
-          })
-          .sort(function (a, b) {
-            return a["TYPE OF PRODUCER"].localeCompare(b["TYPE OF PRODUCER"]);
-          });
+      function map(error, topo) {
+        console.log(topo)
+        // Map and projection
+var path = d3.geoPath();
+var projection = d3.geoAlbersUsa();
 
-        var arcData = pieGenerator(typePro);
-        var color = d3.scaleOrdinal(d3["schemeCategory10"]);
-        var arcGenerator = d3.arc().innerRadius(30).outerRadius(100);
+var colorScale = d3.scaleThreshold()
+  .domain(topo)
+  .range(d3.schemeBlues[7]);
 
-        d3.select("g")
-          .selectAll("path")
-          .data(arcData)
-          .enter()
-          .append("path")
-          .attr("d", arcGenerator)
-          .attr("fill", function (d) {
-            return color(d.data["TYPE OF PRODUCER"]);
-          });
 
-        d3.select("g")
-          .append("circle")
-          .attr("cx", -150)
-          .attr("cy", 150)
-          .attr("r", 6)
-          .style("fill", "#1f77b4");
-        d3.select("g")
-          .append("text")
-          .attr("x", -130)
-          .attr("y", 150)
-          .text("Combined Heat and Power, Commercial Power 0.20%")
-          .style("font-size", "16px")
-          .attr("alignment-baseline", "middle");
+  let mouseOver = function(d) {
+    d3.selectAll(".STATE")
+      .transition()
+      .duration(200)
+      .style("opacity", 1)
+    d3.select(this)
+      .transition()
+      .duration(200)
+      .style("opacity", 1)
+      .style("stroke", "black")
+  }
 
-        d3.select("g")
-          .append("circle")
-          .attr("cx", -150)
-          .attr("cy", 175)
-          .attr("r", 6)
-          .style("fill", "#ff7f0e");
-        d3.select("g")
-          .append("text")
-          .attr("x", -130)
-          .attr("y", 175)
-          .text("Combined Heat and Power, Electric Power 0.98%")
-          .style("font-size", "16px")
-          .attr("alignment-baseline", "middle");
+  let mouseLeave = function(d) {
+    d3.selectAll(".STATE")
+      .transition()
+      .duration(200)
+      .style("opacity", .7)
+    d3.select(this)
+      .transition()
+      .duration(200)
+      .style("stroke", "transparent")
+  }
 
-        d3.select("g")
-          .append("circle")
-          .attr("cx", -150)
-          .attr("cy", 200)
-          .attr("r", 6)
-          .style("fill", "#2ca02c");
-        d3.select("g")
-          .append("text")
-          .attr("x", -130)
-          .attr("y", 200)
-          .text("Combined Heat and Power, Industrial Power 0.58%")
-          .style("font-size", "16px")
-          .attr("alignment-baseline", "middle");
+  // Draw the map
+  d3.select("svg")
+          .append("g")
+    .selectAll("path")
+    .data(topo.features)
+    .enter()
+    .append("path")
+      // draw each state
+      .attr("d", d3.geoPath()
+        .projection(projection)
+      )
+      // set the color of each country
+      .attr("fill", function (d) {
+        d.total = data.get(d.name) || 0;
+        return colorScale(d.total);
+      })
+      .style("stroke", "transparent")
+      .attr("class", function(d){ return "STATE" } )
+      .style("opacity", .7)
+      .on("mouseover", mouseOver )
+      .on("mouseleave", mouseLeave )
+    }
 
-        d3.select("g")
-          .append("circle")
-          .attr("cx", -150)
-          .attr("cy", 225)
-          .attr("r", 6)
-          .style("fill", "#d62728");
-        d3.select("g")
-          .append("text")
-          .attr("x", -130)
-          .attr("y", 225)
-          .text("Electric Generators, Electric Utilities 12.92%")
-          .style("font-size", "16px")
-          .attr("alignment-baseline", "middle");
-
-        d3.select("g")
-          .append("circle")
-          .attr("cx", -150)
-          .attr("cy", 250)
-          .attr("r", 6)
-          .style("fill", "#9467bd");
-        d3.select("g")
-          .append("text")
-          .attr("x", -130)
-          .attr("y", 250)
-          .text("Electric Generators, Independent Power Producers 85.32%")
-          .style("font-size", "16px")
-          .attr("alignment-baseline", "middle");
-      }
+      
     </script>
   </body>
 </html>

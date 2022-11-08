@@ -43,3 +43,6 @@ state_region = pd.merge(state_region, sum2021, on='STATE_CODE')
 print(state_region)
 
 # 10. Rearrange the data in 9 to the following format and output a JSON file through json library in Python
+state_region = state_region.groupby('Region')
+print(state_region)
+# state_region.to_json('state_json.json', orient = "table")
