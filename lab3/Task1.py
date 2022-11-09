@@ -11,7 +11,7 @@ print(df_2021)
 # 3. According to 2021 monthly data, calculate the yearly sum of electricity GENERATION based on STATE. (Note that 'total' is not a type of ENERGY SOURCE and 'Total Electric Power Industry' is not a 'TYPE OF PRODUCER')
 tmp = df_2021.loc[:,['STATE', 'ENERGY SOURCE','GENERATION (Megawatthours)', 'TYPE OF PRODUCER']]
 tmp1 = tmp.loc[(tmp['ENERGY SOURCE'] != 'Total') & (tmp['TYPE OF PRODUCER'] != 'Total Electric Power Industry')]
-sum2021 = tmp1.groupby(['STATE','ENERGY SOURCE'], as_index=False).sum('GENERATION (Megawatthours)')
+sum2021 = tmp1.groupby(['STATE'], as_index=False).sum('GENERATION (Megawatthours)')
 print(sum2021)
 
 # 4. Read US Census Bureau Region data (us_regions.csv)
@@ -43,6 +43,16 @@ state_region = pd.merge(state_region, sum2021, on='STATE_CODE')
 print(state_region)
 
 # 10. Rearrange the data in 9 to the following format and output a JSON file through json library in Python
-state_region = state_region.groupby('Region')
-print(state_region)
-# state_region.to_json('state_json.json', orient = "table")
+print('10>>>>>>>>>>>>>>>>>>>>>>>>>>>>')
+state_region.groupby('Region').apply(print)
+# state_region = state_region.groupby('Region')
+# print(state_region)
+state_region_groups = state_region.groupby('Region')
+print(list(state_region_groups.groups.keys()))
+tree = dict()
+tree['name'] = 'US'
+tree['children'] = []
+for region in list(state_region_groups.groups.keys()):
+  tree['children'].append({'name':region,'children':[]})
+
+print(tree)
