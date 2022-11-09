@@ -52,7 +52,12 @@ print(list(state_region_groups.groups.keys()))
 tree = dict()
 tree['name'] = 'US'
 tree['children'] = []
+
 for region in list(state_region_groups.groups.keys()):
-  tree['children'].append({'name':region,'children':[]})
+  children = []
+  for tuple in list(state_region_groups.get_group(region).itertuples(index=False, name = None)):
+   ele = {'name':tuple[0],'value': tuple[2]}
+   children.append(ele)
+  tree['children'].append({'name':region,'children':children})
 
 print(tree)
