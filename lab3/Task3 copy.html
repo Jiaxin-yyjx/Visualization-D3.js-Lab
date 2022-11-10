@@ -1,0 +1,127 @@
+<!-- CSE 5542 Lab3 Test -->
+<!-- Jiaxin Yang.5039@osu.edu -->
+
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Lab_3 Task_3</title>
+    <!-- <script type="text/javascript" src="d3/d3.min.js"></script>  -->
+    <script src="https://d3js.org/d3.v4.min.js"></script>
+    <script src="https://d3js.org/d3-scale-chromatic.v1.min.js"></script>
+    <script src="https://d3js.org/d3-geo-projection.v2.min.js"></script>
+  </head>
+
+  <body>
+    <svg width="1000" height="3000"></svg>>
+
+    <script type="text/javascript">
+      d3.json("state_Gen.json", function (data) {
+        // Give the data to this cluster layout:
+        var root = d3.hierarchy(data).sum(function (d) {
+          return d.value;
+        }); // Here the size of each leave is given in the 'value' field in input data
+
+        // Then d3.treemap computes the position of each element of the hierarchy
+        d3
+          .treemap()
+          .size([800, 600])
+          .paddingTop(28)
+          .paddingRight(7)
+          .paddingInner(3)(
+          // Padding between each rectangle
+          //.paddingOuter(6)
+          //.padding(20)
+          root
+        );
+
+        // prepare a color scale
+        var color = d3
+          .scaleOrdinal()
+          .domain(["Midwest", "South", "Northeast", "West"])
+          .range(["#007acc", "#009900", "#ff9933", "#ff4d4d"]);
+
+        // And a opacity scale
+        var opacity = d3.scaleLinear().domain([10, 30]).range([0.5, 1]);
+
+        // use this information to add rectangles:
+        d3.select("svg")
+          .append("g")
+          .selectAll("rect")
+          .data(root.leaves())
+          .enter()
+          .append("rect")
+          .attr("x", function (d) {
+            return d.x0;
+          })
+          .attr("y", function (d) {
+            return d.y0;
+          })
+          .attr("width", function (d) {
+            return d.x1 - d.x0;
+          })
+          .attr("height", function (d) {
+            return d.y1 - d.y0;
+          })
+          .style("stroke", "black")
+          .style("fill", function (d) {
+            return color(d.parent.data.name);
+          })
+          .style("opacity", function (d) {
+            return opacity(d.data.value);
+          });
+
+        // and to add the text labels
+        d3.select("svg")
+          .append("g")
+          .selectAll("text")
+          .data(root.leaves())
+          .enter()
+          .append("text")
+          .attr("x", function (d) {
+            return (d.x0 + d.x1) / 2 - 10;
+          }) // +10 to adjust position (more right)
+          .attr("y", function (d) {
+            return (d.y0 + d.y1) / 2 + 5;
+          }) // +20 to adjust position (lower)
+          .text(function (d) {
+            return d.data.name;
+          })
+          .attr("font-size", "14px");
+
+        // Add title for the 4 groups
+        d3.select("svg")
+          .append("g")
+          .selectAll("titles")
+          .data(
+            root.descendants().filter(function (d) {
+              return d.depth == 1;
+            })
+          )
+          .enter()
+          .append("text")
+          .attr("x", function (d) {
+            return d.x0;
+          })
+          .attr("y", function (d) {
+            return d.y0 + 21;
+          })
+          .text(function (d) {
+            return d.data.name;
+          })
+          .attr("font-size", "19px")
+          .attr("fill", function (d) {
+            return color(d.data.name);
+          });
+
+        // Add title for the 4 groups
+        d3.select("svg")
+          .append("g")
+          .append("text")
+          .attr("x", 100)
+          .attr("y", 20) // +20 to adjust position (lower)
+          .text("2021 Electricity Generation Treemap")
+          .attr("font-size", "24px");
+      });
+    </script>
+  </body>
+</html>

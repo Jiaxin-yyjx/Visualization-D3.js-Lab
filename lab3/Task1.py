@@ -1,4 +1,5 @@
 import pandas as pd
+import json
 
 # Lab3 Task1 - Jiaxin Yang
 # 1. Read the energy data
@@ -29,13 +30,14 @@ print(state_Gen)
 state_Gen.to_csv('state_Gen.csv', encoding='utf-8', index=False)
 
 # 7. Select the following 5 states: 'IL', 'IN', 'MI', 'OH', 'WI' from 2021 monthly data.
-state_2021 = df_2021[df_2021['STATE'].isin(['IL', 'IN', 'MI', 'OH', 'WI'])]
+state_2021 = df_2021[df_2021['STATE'].isin(['WI', 'OH', 'MI', 'IN', 'IL'])]
 print(state_2021)
 
 # 8. Output a CSV file which should contain 3 columns: MONTH, STATE, GENERATION 
 mon_sta_gen = state_2021.loc[:,['MONTH', 'STATE', 'GENERATION (Megawatthours)']]
 mon_sta_gen = mon_sta_gen.rename({'GENERATION (Megawatthours)': 'GENERATION'}, axis=1)
-mon_sta_gen.to_csv('mon_sta_gen.csv', encoding='utf-8', index=False)
+mon_sta = mon_sta_gen.groupby(['MONTH', 'STATE'], as_index=False).sum('GENERATION')
+mon_sta.to_csv('mon_sta_gen.csv', encoding='utf-8', index=False)
 
 # 9. Merge 'State Code' and 'Region' in us_regions.csv and 2021 yearly sum data by 'State Code' 
 state_region = region.loc[:,['STATE_CODE', 'Region']]
@@ -43,12 +45,10 @@ state_region = pd.merge(state_region, sum2021, on='STATE_CODE')
 print(state_region)
 
 # 10. Rearrange the data in 9 to the following format and output a JSON file through json library in Python
-print('10>>>>>>>>>>>>>>>>>>>>>>>>>>>>')
 state_region.groupby('Region').apply(print)
-# state_region = state_region.groupby('Region')
-# print(state_region)
+
 state_region_groups = state_region.groupby('Region')
-print(list(state_region_groups.groups.keys()))
+# print(list(state_region_groups.groups.keys()))
 tree = dict()
 tree['name'] = 'US'
 tree['children'] = []
@@ -60,4 +60,5 @@ for region in list(state_region_groups.groups.keys()):
    children.append(ele)
   tree['children'].append({'name':region,'children':children})
 
-print(tree)
+with open("state_Gen.json", "w") as outfile:
+    json.dump(tree, outfile)
