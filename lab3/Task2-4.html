@@ -161,6 +161,45 @@
           .attr("transform", "translate(250, 780)");
       }
 
+      var y = d3.scaleLinear().domain([4500000, 18000000]).range([350, 0]);
+      d3.select("svg")
+        .append("g")
+        .call(d3.axisRight(y).tickSize(16))
+        .attr("transform", "translate(900, 800)");
+
+      var colors = ["red", "white", "blue"];
+      var grad = d3
+        .select("svg")
+        .append("g")
+        .append("defs")
+        .append("linearGradient")
+        .attr("id", "grad")
+        .attr("x1", "0%")
+        .attr("x2", "0%")
+        .attr("y1", "0%")
+        .attr("y2", "100%");
+
+      grad
+        .selectAll("stop")
+        .data(colors)
+        .enter()
+        .append("stop")
+        .style("stop-color", function (d) {
+          return d;
+        })
+        .attr("offset", function (d, i) {
+          return 100 * (i / (colors.length - 1)) + "%";
+        });
+
+      d3.select("svg")
+        .append("g")
+        .append("rect")
+        .attr("x", 885)
+        .attr("y", 800)
+        .attr("width", 15)
+        .attr("height", 350)
+        .style("fill", "url(#grad)");
+
       // Task4: D3 Tree Map
       d3.json("state_Gen.json", function (data) {
         // Give the data to this cluster layout:
