@@ -82,6 +82,50 @@
           .append("text")
           .text("2021 Electricity Generation on Map")
           .attr("transform", "translate(300, 100)");
+
+        var y = d3.scaleLinear().domain([0, 500000000]).range([500, 0]);
+        d3.select("#map")
+        .append("g")
+        .call(d3.axisRight(y).tickSize(11))
+        .attr("transform", "translate(915, 100)");
+
+      var colors = ["blue", "white"];
+      var grad = d3
+        .select("#map")
+        .append("g")
+        .append("defs")
+        .append("linearGradient")
+        .attr("id", "grad")
+        .attr("x1", "0%")
+        .attr("x2", "0%")
+        .attr("y1", "0%")
+        .attr("y2", "100%");
+
+      grad
+        .selectAll("stop")
+        .data(colorScale)
+        .enter()
+        .append("stop")
+        .style("stop-color", function (d) {
+          return d;
+        })
+        .attr("offset", function (d, i) {
+          return 100 * (i / (colorScale.length - 1)) + "%";
+        });
+
+      d3.select("#map")
+        .append("g")
+        .append("rect")
+        .attr("x", 900)
+        .attr("y", 100)
+        .attr("width", 15)
+        .attr("height", 350)
+        .attr("fill", function (d) {
+            d.total = data.get(d.id) || 0;
+            return colorScale(y);
+          });
+
+          //wrong rect
         }
     </script>
   </body>
