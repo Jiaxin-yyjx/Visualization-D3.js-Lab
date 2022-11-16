@@ -10,6 +10,7 @@ print(df_2021)
 
 # 3. Output a CSV file which should contain 3 columns: MONTH, STATE, GENERATION(Mwh)
 mon_stat_gen = df_2021.loc[:,['MONTH', 'STATE','GENERATION (Megawatthours)']]
+mon_stat_gen = mon_stat_gen.rename({'GENERATION (Megawatthours)': 'GENERATION'}, axis=1) 
 mon_stat_gen.to_csv('mon_stat_gen.csv', encoding='utf-8', index=False)
 
 # 4. According to the original energy data, select 2021 monthly data based on TYPE OF PRODUCER. (Note that ENERGY SOURCE is 'Total')
