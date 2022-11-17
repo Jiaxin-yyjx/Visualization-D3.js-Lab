@@ -17,28 +17,30 @@
     <script type="text/javascript">
       // TASK 3 - D3 Bar Chart
       // get the data
-      d3.csv("mon_stats_gen.csv", BarChart);
+      d3.csv("mon_stat_gen.csv", BarChart);
 
 function BarChart(error, data) {
 // X axis
 var x = d3.scaleBand()
-  .range([ 0, 400 ])
+  .range([ 100, 700 ])
   .domain(data.map(function(d) { return d.MONTH; }))
-  .padding(0.2);
+  .padding(0.4);
   
   d3.select("#bar").append("g")
-  .attr("transform", "translate(0, 300)")
-  .call(d3.axisBottom(x))
+  .attr("transform", "translate(0, 500)")
+  .call(d3.axisBottom(x).tickSize(14))
   .selectAll("text")
-    .attr("transform", "translate(-10,0)rotate(-45)")
+  .attr("transform", "translate(3, 0)")
     .style("text-anchor", "end");
 
 // Add Y axis
 var y = d3.scaleLinear()
-  .domain([0, 13000])
-  .range([ 300, 0]);
+  .domain([0, 42000000])
+  .range([500, 80]);
+
   d3.select("#bar").append("g")
-  .call(d3.axisLeft(y));
+  .call(d3.axisLeft(y).tickSize(10))
+  .attr("transform", "translate(100,0)");
 
 
 // Bars
@@ -49,8 +51,9 @@ d3.select("#bar").selectAll("mybar")
     .attr("x", function(d) { return x(d.MONTH); })
     .attr("y", function(d) { return y(d.GENERATION); })
     .attr("width", x.bandwidth())
-    .attr("height", function(d) { return 300 - y(d.GENERATION); })
+    .attr("height", function(d) { return 600 - y(d.GENERATION); })
     .attr("fill", 'steelblue')
+    .attr("transform", "translate(0,50)scaleY(1)");
 
 }
 
