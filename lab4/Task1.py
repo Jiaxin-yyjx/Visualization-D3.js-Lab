@@ -2,7 +2,7 @@ import pandas as pd
 
 # Lab4 Task1 - Jiaxin Yang
 # 1. Read the energy data
-df = pd.read_csv('electricity_generation.csv')
+df = pd.read_csv('data/electricity_generation.csv')
 
 # 2. Find total generation (TYPE OF PRODUCER is 'Total Electric Power Industry' and ENERGY SOURCE is 'Total') data records from 2021/01 to 2021/12 (US-TOTAL for STATE is excluded)
 df_2021 = df.loc[(df['YEAR'] == 2021) & (df['STATE'] != 'US-TOTAL') & (df['ENERGY SOURCE'] == 'Total') & (df['TYPE OF PRODUCER'] == 'Total Electric Power Industry')]
@@ -11,7 +11,7 @@ print(df_2021)
 # 3. Output a CSV file which should contain 3 columns: MONTH, STATE, GENERATION(Mwh)
 mon_stat_gen = df_2021.loc[:,['MONTH', 'STATE','GENERATION (Megawatthours)']]
 mon_stat_gen = mon_stat_gen.rename({'GENERATION (Megawatthours)': 'GENERATION'}, axis=1) 
-mon_stat_gen.to_csv('mon_stat_gen.csv', encoding='utf-8', index=False)
+mon_stat_gen.to_csv('data/mon_stat_gen.csv', encoding='utf-8', index=False)
 
 # 4. According to the original energy data, select 2021 monthly data based on TYPE OF PRODUCER. (Note that ENERGY SOURCE is 'Total')
 df_2021_Mon = df.loc[(df['YEAR'] == 2021) & (df['ENERGY SOURCE'] == 'Total')].loc[:,['STATE', 'GENERATION (Megawatthours)', 'TYPE OF PRODUCER']]
@@ -31,7 +31,7 @@ print(table)
 df_map = df.loc[(df['YEAR'] == 2021) & (df['ENERGY SOURCE'] != 'Total') & (df['TYPE OF PRODUCER'] != 'Total Electric Power Industry')].loc[:,['STATE', 'ENERGY SOURCE','GENERATION (Megawatthours)', 'TYPE OF PRODUCER']]
 sum2021 = df_map.groupby(['STATE'], as_index=False).sum('GENERATION (Megawatthours)').rename({'GENERATION (Megawatthours)': 'GENERATION', 'STATE': 'STATE_CODE'}, axis=1) 
 
-region = pd.read_csv('us_regions_divisions.csv')
+region = pd.read_csv('data/us_regions_divisions.csv')
 region = region.rename({'State': 'STATE', 'State Code': 'STATE_CODE'}, axis=1) 
 
 state_Gen = sum2021.loc[:,['STATE_CODE', 'GENERATION']]
