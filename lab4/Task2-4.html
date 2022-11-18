@@ -8,15 +8,36 @@
     <script src="https://d3js.org/d3.v4.min.js"></script>
     <script src="https://d3js.org/d3-scale-chromatic.v1.min.js"></script>
     <script src="https://d3js.org/d3-geo-projection.v2.min.js"></script>
-    <script type="text/javascript" src="/js/plot_map.js"></script>
-    <script type="text/javascript" src="/js/plot_bar.js"></script>
-    <script type="text/javascript" src="/js/plot_pie.js"></script>
-    <style></style>
+    <script type="text/javascript" src="js/plot_map.js"></script>
+    <script type="text/javascript" src="js/plot_bar.js"></script>
+    <script type="text/javascript" src="js/plot_pie.js"></script>
   </head>
 
   <body>
-    <svg id="map" width="1000" height="1000" transform="translate(0, 0)"></svg>
-    <svg id="bar" width="1000" height="1000"></svg>
-    <svg id="pie" width="1000" height="1000"></svg>
+    <div class="container">
+      <div class="row">
+        <div class="col-sm-4">
+          <svg id="map" width="1000" height="700"></svg>
+        </div>
+      </div>
+      <div class="row">
+        <div class="col-sm-4">
+          <svg
+            id="bar"
+            width="1000"
+            height="1000"
+            transform="translate(0, 0)"
+          ></svg>
+        </div>
+        <div class="col-sm-4">
+          <svg
+            id="pie"
+            width="1000"
+            height="1000"
+            transform="translate(0, 0)"
+          ></svg>
+        </div>
+      </div>
+    </div>
   </body>
 </html>
