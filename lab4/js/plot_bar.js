@@ -1,8 +1,29 @@
 // TASK 3 - D3 Bar Chart
+// set the dimensions and margins of the graph
+let margin = {top: 30, right: 30, bottom: 70, left: 60},
+    width = 460 - margin.left - margin.right,
+    height = 400 - margin.top - margin.bottom;
+
+// append the svg object to the body of the page
+let svg = d3.select("#bar")
+  .append("svg")
+    .attr("width", width + margin.left + margin.right)
+    .attr("height", height + margin.top + margin.bottom)
+  .append("g")
+    .attr("transform",
+          "translate(" + margin.left + "," + margin.top + ")");
+
+
 // get the data
 d3.csv("data/mon_stat_gen.csv", BarChart);
 
-function BarChart(error, data) {
+function BarChart(error, bardata) {
+  let data = [];
+  bardata.forEach(function(d){
+    if(d.STATE == "US-TOTAL") {
+      data.push(d);
+    }
+  })
   // X axis
   var x = d3
     .scaleBand()
@@ -14,8 +35,7 @@ function BarChart(error, data) {
     )
     .padding(0.4);
 
-  d3.select("#bar")
-    .append("g")
+    svg.append("g")
     .attr("transform", "translate(0, 600)")
     .call(d3.axisBottom(x).tickSize(14))
     .selectAll("text")
@@ -25,13 +45,13 @@ function BarChart(error, data) {
   // Add Y axis
   var y = d3.scaleLinear().domain([0, 42000000]).range([500, 100]);
 
-  d3.select("#bar")
-    .append("g")
+  svg.
+    append("g")
     .call(d3.axisLeft(y).tickSize(10))
     .attr("transform", "translate(100,100)");
 
   // Bars
-  d3.select("#bar")
+  svg.select("#bar")
     .selectAll("mybar")
     .data(data)
     .enter()

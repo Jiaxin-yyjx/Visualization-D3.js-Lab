@@ -5,9 +5,7 @@ import pandas as pd
 df = pd.read_csv('data/electricity_generation.csv')
 
 # 2. Find total generation (TYPE OF PRODUCER is 'Total Electric Power Industry' and ENERGY SOURCE is 'Total') data records from 2021/01 to 2021/12 (US-TOTAL for STATE is excluded)
-df_2021 = df.loc[(df['YEAR'] == 2021) & (df['STATE'] != 'US-TOTAL') & (df['ENERGY SOURCE'] == 'Total') & (df['TYPE OF PRODUCER'] == 'Total Electric Power Industry')]
-print(df_2021)
-df_2021.to_csv('data/df_2021.csv', encoding='utf-8', index=False)
+df_2021 = df.loc[(df['YEAR'] == 2021) & (df['ENERGY SOURCE'] == 'Total') & (df['TYPE OF PRODUCER'] == 'Total Electric Power Industry')]
 
 # 3. Output a CSV file which should contain 3 columns: MONTH, STATE, GENERATION(Mwh)
 mon_stat_gen = df_2021.loc[:,['MONTH', 'STATE','GENERATION (Megawatthours)']]
@@ -23,11 +21,11 @@ total_Type = df_2021_Mon.groupby(['STATE', 'TYPE OF PRODUCER'], as_index=False).
 print(total_Type)
 
 # 6. Use pandas.pivot_table to rearrange the dataframe
-table = pd.pivot_table(total_Type, values='GENERATION (Megawatthours)', index=['TYPE OF PRODUCER', 'STATE'])
+table = pd.pivot_table(total_Type, values='GENERATION (Megawatthours)', index=['STATE'], columns=['TYPE OF PRODUCER'], fill_value=0)
 print(table)
 
 # 7. Output the CSV file which has 3 columns: STATE,TYPE OF PRODUCER, GENERATION(Mwh)
-table.to_csv('data/type_Gen.csv', encoding='utf-8', index=False)
+table.to_csv('data/type_Gen.csv', encoding='utf-8')
 
 # 8. Prepare the same CSV file for the choropleth map in lab 3
 df_map = df.loc[(df['YEAR'] == 2021) & (df['ENERGY SOURCE'] != 'Total') & (df['TYPE OF PRODUCER'] != 'Total Electric Power Industry')].loc[:,['STATE', 'ENERGY SOURCE','GENERATION (Megawatthours)', 'TYPE OF PRODUCER']]
