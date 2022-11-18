@@ -1,17 +1,10 @@
 // TASK 3 - D3 Bar Chart
 // set the dimensions and margins of the graph
-let margin = {top: 30, right: 30, bottom: 70, left: 60},
-    width = 460 - margin.left - margin.right,
-    height = 400 - margin.top - margin.bottom;
+let margin_bar = {top: 30, right: 30, bottom: 70, left: 60},
+    width_bar = 460 - margin.left - margin.right,
+    height_bar = 400 - margin.top - margin.bottom;
 
 // append the svg object to the body of the page
-let svg = d3.select("#bar")
-  .append("svg")
-    .attr("width", width + margin.left + margin.right)
-    .attr("height", height + margin.top + margin.bottom)
-  .append("g")
-    .attr("transform",
-          "translate(" + margin.left + "," + margin.top + ")");
 
 
 // get the data
