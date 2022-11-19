@@ -7,9 +7,6 @@ let width = 450,
 // The radius of the pieplot is half the width or half the height (smallest one). I subtract a bit of margin.
 let radius = Math.min(width, height) / 2 - margin;
 
-// append the svg object to the div called 'pie'
-
-
 d3.csv("type_Gen.csv", pieChart);
 
 function pieChart(error, typePro) {
