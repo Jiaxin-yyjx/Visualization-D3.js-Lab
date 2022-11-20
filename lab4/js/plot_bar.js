@@ -4,9 +4,9 @@ d3.csv("data/mon_stat_gen.csv", BarChart);
 
 function BarChart(error, bardata) {
   // set the dimensions and margins of the graph
-  let margin = { top: 30, right: 30, bottom: 70, left: 60 },
-    width = 460 - margin.left - margin.right,
-    height = 400 - margin.top - margin.bottom;
+  let margin = { top: 100, right: 0, bottom: 70, left: 120 },
+    width = 760 - margin.left - margin.right,
+    height = 600 - margin.top - margin.bottom;
 
   // append the svg object to the body of the page
   let svg = d3
@@ -23,52 +23,43 @@ function BarChart(error, bardata) {
       data.push(d);
     }
   });
-  // X axis
-  var x = d3
-    .scaleBand()
-    .range([100, 700])
-    .domain(
-      data.map(function (d) {
-        return d.MONTH;
-      })
-    )
-    .padding(0.4);
+ // X axis
+var x = d3.scaleBand()
+.range([ 0, width ])
+.domain(data.map(function(d) { return d.MONTH; }))
+.padding(0.4);
 
-  svg
-    .append("g")
-    .attr("transform", "translate(0, 600)")
-    .call(d3.axisBottom(x).tickSize(14))
-    .selectAll("text")
-    .attr("transform", "translate(3, 0)")
-    .style("text-anchor", "end");
+svg.append("g")
+.attr("transform", "translate(0," + height + ")")
+.call(d3.axisBottom(x))
+.selectAll("text")
+  .attr("transform", "translate(3,0)")
+  .style("text-anchor", "end");
 
-  // Add Y axis
-  var y = d3.scaleLinear().domain([0, 42000000]).range([500, 100]);
+// Add Y axis
+var y = d3.scaleLinear()
+.domain([0, d3.max(data, function(d) {return +d.GENERATION;})])
+.range([ height, 0]);
+svg.append("g")
+.call(d3.axisLeft(y));
 
-  svg
-    .append("g")
-    .call(d3.axisLeft(y).tickSize(10))
-    .attr("transform", "translate(100,100)");
-
-  // Bars
-  svg
-    .select("#bar")
-    .selectAll("mybar")
-    .data(data)
-    .enter()
-    .append("rect")
-    .attr("x", function (d) {
-      return x(d.MONTH);
-    })
-    .attr("y", function (d) {
-      return y(d.GENERATION);
-    })
+// Bars
+svg.selectAll("mybar")
+  .data(data)
+  .enter()
+  .append("rect")
+    .attr("x", function(d) { return x(d.MONTH); })
+    .attr("y", function(d) { return y(d.GENERATION); })
     .attr("width", x.bandwidth())
-    .attr("height", function (d) {
-      return 500 - y(d.GENERATION);
-    })
+    .attr("height", function(d) { return height - y(d.GENERATION); })
     .attr("fill", "steelblue")
-    .attr("transform", "translate(0,100)");
+
+    svg
+    .append("g")
+    // title
+    .append("text")
+    .text("2021 United States Monthly Electricity Generation")
+    .attr("transform", "translate(100, -25)");
 
   return svg;
 }
