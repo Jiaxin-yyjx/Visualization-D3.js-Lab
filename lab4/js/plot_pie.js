@@ -19,6 +19,20 @@ function pieChart(error, data) {
     .attr("height", height)
     .append("g");
 
+    let a = {'Combined Heat and Power, Commercial Power': 0,
+    'Combined Heat and Power, Electric Power': 0,
+    'Combined Heat and Power, Induestrial Power': 0,
+    'Combined Heat and Power, Independent Power Producers': 0,
+    'Total Electric Power Induestry': 0} 
+    
+    for (ele in data){
+     a['Combined Heat and Power, Commercial Power'] += parseInt(ele['Combined Heat and Power, Commercial Power'])
+     a['Combined Heat and Power, Electric Power'] += parseInt(ele['Combined Heat and Power, Electric Power'])
+     a['Combined Heat and Power, Induestrial Power'] += parseInt(ele['Combined Heat and Power, Induestrial Power'])
+     a['Combined Heat and Power, Independent Power Producers'] += parseInt(ele['Combined Heat and Power, Independent Power Producers'])
+     a['Total Electric Power Induestry'] += parseInt(ele['Total Electric Power Induestry'])
+    }
+
   let typePro = [];
   data.forEach(function (d) {
     if (d.STATE == "US-TOTAL") {
