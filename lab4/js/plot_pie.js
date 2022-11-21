@@ -1,8 +1,5 @@
 // TASK 4 - D3 Pie Chart
-
-d3.csv("data/type_Gen.csv", pieChart);
-
-function pieChart(error, data) {
+function DrawPie(statename, data) {
   // console.log(data);
   // set the dimensions and margins of the graph
   let width = 800,
@@ -19,56 +16,24 @@ function pieChart(error, data) {
     .attr("height", height)
     .append("g");
 
-  let typePro = [
-    {
-      "TYPE OF PRODUCER": "Combined Heat and Power, Commercial Power",
-      "GENERATION (Megawatthours)": 13147622,
-    },
-    {
-      "TYPE OF PRODUCER": "Combined Heat and Power, Electric Power",
-      "GENERATION (Megawatthours)": 132382347,
-    },
-    {
-      "TYPE OF PRODUCER": "Combined Heat and Power, Industrial Power",
-      "GENERATION (Megawatthours)": 139607169,
-    },
-    {
-      "TYPE OF PRODUCER": "Electric Generators, Electric Utilities",
-      "GENERATION (Megawatthours)": 2216234058,
-    },
-    {
-      "TYPE OF PRODUCER": "Electric Generators, Independent Power Producers",
-      "GENERATION (Megawatthours)": 1614168959,
-    },
-  ];
-  // data.forEach((ele) => {
-  //   typePro[0]["GENERATION (Megawatthours)"] += parseInt(
-  //     ele["Combined Heat and Power, Commercial Power"]
-  //   );
-  //   typePro[1]["GENERATION (Megawatthours)"] += parseInt(
-  //     ele["Combined Heat and Power, Electric Power"]
-  //   );
-  //   typePro[2]["GENERATION (Megawatthours)"] += parseInt(
-  //     ele["Combined Heat and Power, Industrial Power"]
-  //   );
-  //   typePro[3]["GENERATION (Megawatthours)"] += parseInt(
-  //     ele["Electric Generators, Electric Utilities"]
-  //   );
-  //   typePro[4]["GENERATION (Megawatthours)"] += parseInt(
-  //     ele["Electric Generators, Independent Power Producers"]
-  //   );
-  // });
+  let typePro = {};
+  data.forEach(function (d) {
+    if (d.STATE == statename.code) {
+      typePro["Combined Heat and Power, Commercial Power"] = d["Combined Heat and Power, Commercial Power"];
+      typePro["Combined Heat and Power, Electric Power"] = d["Combined Heat and Power, Electric Power"];
+      typePro["Combined Heat and Power, Industrial Power"] = d["Combined Heat and Power, Industrial Power"];
+      typePro["Electric Generators, Electric Utilities"] = d["Electric Generators, Electric Utilities"];
+      typePro["Electric Generators, Independent Power Producers"] = d["Electric Generators, Independent Power Producers"];
+    }
+  });
 
   let pieGenerator = d3
     .pie()
     .value(function (d) {
-      return d["GENERATION (Megawatthours)"];
-    })
-    .sort(function (a, b) {
-      return a["TYPE OF PRODUCER"].localeCompare(b["TYPE OF PRODUCER"]);
+      return d.value;
     });
 
-  let arcData = pieGenerator(typePro);
+  let arcData = pieGenerator(d3.entries(typePro));
   let color = d3.scaleOrdinal(d3["schemeCategory10"]);
   let arcGenerator = d3.arc().innerRadius(0).outerRadius(radius);
 
@@ -81,14 +46,14 @@ function pieChart(error, data) {
     .attr("d", arcGenerator)
     .attr("transform", "translate(300, 270)")
     .attr("fill", function (d) {
-      return color(d.data["TYPE OF PRODUCER"]);
+      return color(d.data.key);
     });
 
   svg
     .append("g")
     // title
     .append("text")
-    .text("2021 United States Electricity Generation by Different Producer")
+    .text("2021 " + statename.name + " Electricity Generation by Different Producer")
     .attr("transform", "translate(150, 70)");
 
   let legend = svg.append("g").attr("transform", "translate(530, 130)");

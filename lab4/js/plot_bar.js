@@ -1,8 +1,5 @@
 // TASK 3 - D3 Bar Chart
-// get the data
-d3.csv("data/mon_stat_gen.csv", BarChart);
-
-function BarChart(error, bardata) {
+function DrawBar(statename, bardata) {
   // set the dimensions and margins of the graph
   let margin = { top: 100, right: 0, bottom: 70, left: 120 },
     width = 760 - margin.left - margin.right,
@@ -19,10 +16,12 @@ function BarChart(error, bardata) {
 
   let data = [];
   bardata.forEach(function (d) {
-    if (d.STATE == "US-TOTAL") {
+    if (d.STATE == statename.code) {
       data.push(d);
     }
   });
+console.log(data);
+
   // X axis
   var x = d3
     .scaleBand()
@@ -76,8 +75,18 @@ function BarChart(error, bardata) {
     .append("g")
     // title
     .append("text")
-    .text("2021 United States Monthly Electricity Generation")
+    .text("2021 " + statename.name + " Monthly Electricity Generation")
     .attr("transform", "translate(100, -25)");
+
+  let brush = d3.brush().extent([[0, 0], [width, height]]).on("start", brushed).on("brush", brushed);
+  svg.call(brush);
+
+  function brushed() {
+    let extent = d3.event.selection;
+    svg.selectAll("mybar").classed("selected", function(d) {
+      return x(d.MONTH) >= extent[0][0]
+    })
+  }
 
   return svg;
 }

@@ -1,18 +1,16 @@
 // TASK 2 - D3 Choropleth Map
-// Load external data and boot
-let data = d3.map();
-d3.queue()
-  .defer(d3.json, "data/us-states.json")
-  .defer(d3.csv, "data/state_Gen.csv", function (d) {
-    data.set(d.STATE_CODE, +d.GENERATION);
-  })
-  .await(ready);
 
-function ready(error, topo) {
+function DrawMap(topo, topo2, month_data, type_data) {
   let width = 1000,
     height = 700;
-  console.log(topo);
 
+  topo.features.forEach(function (d) {
+    topo2.forEach(function (c) {
+    if (d.properties.name == c.STATE) {
+      d["total"] = c.GENERATION;
+    }})
+  });
+  
   let svg = d3
     .select("#map")
     .append("svg")
@@ -27,10 +25,8 @@ function ready(error, topo) {
 
   // create a tooltip
   var Tooltip = d3
-    .select("#map")
-    .append("div")
+    .select("#tooltip")
     .style("opacity", 0)
-    .attr("class", "tooltip")
     .style("background-color", "white")
     .style("border", "solid")
     .style("border-width", "2px")
@@ -47,7 +43,7 @@ function ready(error, topo) {
     d3.select(this).transition().duration(200).style("opacity", 1);
   };
   let mousemove = function (d) {
-    Tooltip.html(d.name + "<br>Generation: " + d.total)
+    Tooltip.html(d.properties.name + "<br>Generation: " + d.total)
       .style("left", d3.mouse(this)[0] + 70 + "px")
       .style("top", d3.mouse(this)[1] + "px");
   };
@@ -64,11 +60,12 @@ function ready(error, topo) {
     .data(topo.features)
     .enter()
     .append("path")
+    .attr("id", "just_map")
     // draw each State
     .attr("d", d3.geoPath().projection(projection))
     // set the color of each State
     .attr("fill", function (d) {
-      d.total = data.get(d.id) || 0;
+      // d.total = data.get(d.id) || 0;
       return colorScale(d.total);
     })
     .style("stroke", "grey")
@@ -77,7 +74,13 @@ function ready(error, topo) {
     })
     .on("mouseover", mouseOver)
     .on("mousemove", mousemove)
-    .on("mouseleave", mouseLeave);
+    .on("mouseleave", mouseLeave)
+    
+    let zoom = d3.zoom().scaleExtent([1, 5]).on("zoom", zoomed);
+    svg.call(zoom);
+    function zoomed() {
+      svg.selectAll("#just_map").attr("transform", d3.event.transform);
+    }
 
   svg
     .append("g")
