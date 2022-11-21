@@ -25,7 +25,7 @@ table = pd.pivot_table(total_Type, values='GENERATION (Megawatthours)', index=['
 print(table)
 
 # 7. Output the CSV file which has 3 columns: STATE,TYPE OF PRODUCER, GENERATION(Mwh)
-table.to_csv('data/type_Gen.csv', encoding='utf-8')
+table.to_csv('data/type_Gen.csv')
 
 # 8. Prepare the same CSV file for the choropleth map in lab 3
 df_map = df.loc[(df['YEAR'] == 2021) & (df['ENERGY SOURCE'] != 'Total') & (df['TYPE OF PRODUCER'] != 'Total Electric Power Industry')].loc[:,['STATE', 'ENERGY SOURCE','GENERATION (Megawatthours)', 'TYPE OF PRODUCER']]
