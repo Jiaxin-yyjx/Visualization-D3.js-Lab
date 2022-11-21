@@ -11,6 +11,7 @@ d3.queue()
 function ready(error, topo) {
   let width = 1000,
     height = 700;
+  console.log(topo);
 
   let svg = d3
     .select("#map")
@@ -24,16 +25,34 @@ function ready(error, topo) {
     .domain([0, 500000000])
     .interpolator(d3.interpolateBlues);
 
+  // create a tooltip
+  var Tooltip = d3
+    .select("#map")
+    .append("div")
+    .style("opacity", 0)
+    .attr("class", "tooltip")
+    .style("background-color", "white")
+    .style("border", "solid")
+    .style("border-width", "2px")
+    .style("border-radius", "5px")
+    .style("padding", "5px");
+
   // Map and projection
   let path = d3.geoPath();
   let projection = d3.geoAlbersUsa();
 
   let mouseOver = function (d) {
+    Tooltip.style("opacity", 1);
     d3.selectAll(".State").transition().duration(200).style("opacity", 0.7);
     d3.select(this).transition().duration(200).style("opacity", 1);
   };
-
+  let mousemove = function (d) {
+    Tooltip.html(d.name + "<br>Generation: " + d.total)
+      .style("left", d3.mouse(this)[0] + 70 + "px")
+      .style("top", d3.mouse(this)[1] + "px");
+  };
   let mouseLeave = function (d) {
+    Tooltip.style("opacity", 0);
     d3.selectAll(".State").transition().duration(200).style("opacity", 1);
   };
 
@@ -57,6 +76,7 @@ function ready(error, topo) {
       return "State";
     })
     .on("mouseover", mouseOver)
+    .on("mousemove", mousemove)
     .on("mouseleave", mouseLeave);
 
   svg

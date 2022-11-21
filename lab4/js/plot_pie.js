@@ -3,11 +3,11 @@
 d3.csv("data/type_Gen.csv", pieChart);
 
 function pieChart(error, data) {
-  console.log(data);
+  // console.log(data);
   // set the dimensions and margins of the graph
-  let width = 900,
+  let width = 800,
     height = 500,
-    margin = 40;
+    margin = 80;
 
   // The radius of the pieplot is half the width or half the height (smallest one). I subtract a bit of margin.
   let radius = Math.min(width, height) / 2 - margin;
@@ -19,26 +19,45 @@ function pieChart(error, data) {
     .attr("height", height)
     .append("g");
 
-    let a = {'Combined Heat and Power, Commercial Power': 0,
-    'Combined Heat and Power, Electric Power': 0,
-    'Combined Heat and Power, Induestrial Power': 0,
-    'Combined Heat and Power, Independent Power Producers': 0,
-    'Total Electric Power Induestry': 0} 
-    
-    for (ele in data){
-     a['Combined Heat and Power, Commercial Power'] += parseInt(ele['Combined Heat and Power, Commercial Power'])
-     a['Combined Heat and Power, Electric Power'] += parseInt(ele['Combined Heat and Power, Electric Power'])
-     a['Combined Heat and Power, Induestrial Power'] += parseInt(ele['Combined Heat and Power, Induestrial Power'])
-     a['Combined Heat and Power, Independent Power Producers'] += parseInt(ele['Combined Heat and Power, Independent Power Producers'])
-     a['Total Electric Power Induestry'] += parseInt(ele['Total Electric Power Induestry'])
-    }
-
-  let typePro = [];
-  data.forEach(function (d) {
-    if (d.STATE == "US-TOTAL") {
-      data.push(d);
-    }
-  });
+  let typePro = [
+    {
+      "TYPE OF PRODUCER": "Combined Heat and Power, Commercial Power",
+      "GENERATION (Megawatthours)": 13147622,
+    },
+    {
+      "TYPE OF PRODUCER": "Combined Heat and Power, Electric Power",
+      "GENERATION (Megawatthours)": 132382347,
+    },
+    {
+      "TYPE OF PRODUCER": "Combined Heat and Power, Industrial Power",
+      "GENERATION (Megawatthours)": 139607169,
+    },
+    {
+      "TYPE OF PRODUCER": "Electric Generators, Electric Utilities",
+      "GENERATION (Megawatthours)": 2216234058,
+    },
+    {
+      "TYPE OF PRODUCER": "Electric Generators, Independent Power Producers",
+      "GENERATION (Megawatthours)": 1614168959,
+    },
+  ];
+  // data.forEach((ele) => {
+  //   typePro[0]["GENERATION (Megawatthours)"] += parseInt(
+  //     ele["Combined Heat and Power, Commercial Power"]
+  //   );
+  //   typePro[1]["GENERATION (Megawatthours)"] += parseInt(
+  //     ele["Combined Heat and Power, Electric Power"]
+  //   );
+  //   typePro[2]["GENERATION (Megawatthours)"] += parseInt(
+  //     ele["Combined Heat and Power, Industrial Power"]
+  //   );
+  //   typePro[3]["GENERATION (Megawatthours)"] += parseInt(
+  //     ele["Electric Generators, Electric Utilities"]
+  //   );
+  //   typePro[4]["GENERATION (Megawatthours)"] += parseInt(
+  //     ele["Electric Generators, Independent Power Producers"]
+  //   );
+  // });
 
   let pieGenerator = d3
     .pie()
@@ -51,10 +70,7 @@ function pieChart(error, data) {
 
   let arcData = pieGenerator(typePro);
   let color = d3.scaleOrdinal(d3["schemeCategory10"]);
-  let arcGenerator = d3
-    .arc()
-    .innerRadius(radius / 2)
-    .outerRadius(radius);
+  let arcGenerator = d3.arc().innerRadius(0).outerRadius(radius);
 
   svg
     .append("g")
@@ -63,11 +79,19 @@ function pieChart(error, data) {
     .enter()
     .append("path")
     .attr("d", arcGenerator)
+    .attr("transform", "translate(300, 270)")
     .attr("fill", function (d) {
       return color(d.data["TYPE OF PRODUCER"]);
     });
 
-  let legend = svg.append("g").attr("transform", "translate(500, 100)");
+  svg
+    .append("g")
+    // title
+    .append("text")
+    .text("2021 United States Electricity Generation by Different Producer")
+    .attr("transform", "translate(150, 70)");
+
+  let legend = svg.append("g").attr("transform", "translate(530, 130)");
 
   legend
     .append("circle")
