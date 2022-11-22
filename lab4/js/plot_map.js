@@ -43,14 +43,17 @@ function DrawMap(topo, topo2, month_data, type_data) {
     d3.select(this).transition().duration(200).style("opacity", 1);
   };
   let mousemove = function (d) {
-    Tooltip.html(d.properties.name + "<br>Generation: " + d.total)
+    Tooltip.html(d.properties.name + "<br>Generation: " + parseInt(d.total))
       .style("left", d3.mouse(this)[0] + 70 + "px")
-      .style("top", d3.mouse(this)[1] + "px");
+      .style("top", d3.mouse(this)[1] + 50 + "px");
   };
   let mouseLeave = function (d) {
     Tooltip.style("opacity", 0);
     d3.selectAll(".State").transition().duration(200).style("opacity", 1);
   };
+  let mouseClick = function(d){
+    updatePage(d, month_data, type_data)
+  }
 
   // Draw the map
   svg
@@ -75,6 +78,7 @@ function DrawMap(topo, topo2, month_data, type_data) {
     .on("mouseover", mouseOver)
     .on("mousemove", mousemove)
     .on("mouseleave", mouseLeave)
+    .on("click", mouseClick);
     
     let zoom = d3.zoom().scaleExtent([1, 5]).on("zoom", zoomed);
     svg.call(zoom);

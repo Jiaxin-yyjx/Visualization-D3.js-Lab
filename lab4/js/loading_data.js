@@ -16,3 +16,16 @@ function LoadData(error, map_data, year_data, month_data, type_data) {
     DrawPie(state, type_data);
 
 }
+
+// function updatePage(state, month_data, type_data) {
+//     // map_data.features.pop();
+//     DrawMap(map_data, year_data, month_data, type_data);
+//     // console.log(map_data)
+//     let state = {};
+//     state['code'] = 'US-TOTAL';
+//     state['name'] = 'United States';
+//     DrawBar(state, month_data);
+//     DrawPie(state, type_data);
+
+// }
+
