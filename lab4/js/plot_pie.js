@@ -2,7 +2,7 @@
 function DrawPie(statename, data) {
   // console.log(data);
   // set the dimensions and margins of the graph
-  let width = 800,
+  let width = 900,
     height = 500,
     margin = 80;
 
@@ -58,6 +58,14 @@ function DrawPie(statename, data) {
 
   let legend = svg.append("g").attr("transform", "translate(530, 130)");
 
+const sum = Object.values(typePro).reduce((accumulator, value) => {
+  return parseInt(accumulator) + parseInt(value);
+}, 0);
+
+let power1 = typePro[Object.keys(typePro)[0]]/sum*100, power2 = typePro[Object.keys(typePro)[1]]/sum*100, 
+    power3 = typePro[Object.keys(typePro)[2]]/sum*100, power4 = typePro[Object.keys(typePro)[3]]/sum*100,
+    power5 = typePro[Object.keys(typePro)[4]]/sum*100;
+
   legend
     .append("circle")
     .attr("cx", 0)
@@ -75,7 +83,7 @@ function DrawPie(statename, data) {
     .append("text")
     .attr("x", 20)
     .attr("y", 20)
-    .text("Commercial Power 0.32%")
+    .text("Commercial Power " + power1.toFixed(2) + "%")
     .style("font-size", "16px")
     .attr("alignment-baseline", "middle");
 
@@ -96,7 +104,7 @@ function DrawPie(statename, data) {
     .append("text")
     .attr("x", 20)
     .attr("y", 70)
-    .text("Electric Power 3.22%")
+    .text("Electric Power " + power2.toFixed(2) + "%")
     .style("font-size", "16px")
     .attr("alignment-baseline", "middle");
 
@@ -117,7 +125,7 @@ function DrawPie(statename, data) {
     .append("text")
     .attr("x", 20)
     .attr("y", 120)
-    .text("Industrial Power 3.39%")
+    .text("Industrial Power " + power3.toFixed(2) + "%")
     .style("font-size", "16px")
     .attr("alignment-baseline", "middle");
 
@@ -138,7 +146,7 @@ function DrawPie(statename, data) {
     .append("text")
     .attr("x", 20)
     .attr("y", 170)
-    .text("Electric Utilities 53.85%")
+    .text("Electric Utilities " + power4.toFixed(2) + "%")
     .style("font-size", "16px")
     .attr("alignment-baseline", "middle");
 
@@ -159,7 +167,7 @@ function DrawPie(statename, data) {
     .append("text")
     .attr("x", 20)
     .attr("y", 220)
-    .text("Independent Power Producers 39.22%")
+    .text("Independent Power Producers " + power5.toFixed(2) + "%")
     .style("font-size", "16px")
     .attr("alignment-baseline", "middle");
 

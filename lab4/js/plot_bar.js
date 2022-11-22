@@ -78,15 +78,15 @@ console.log(data);
     .text("2021 " + statename.name + " Monthly Electricity Generation")
     .attr("transform", "translate(100, -25)");
 
-  let brush = d3.brush().extent([[0, 0], [width, height]]).on("start", brushed).on("brush", brushed);
-  svg.call(brush);
+  // let brush = d3.brush().extent([[0, 0], [width, height]]).on("start", brushed).on("brush", brushed);
+  // svg.call(brush);
 
-  function brushed() {
-    let extent = d3.event.selection;
-    svg.selectAll("mybar").classed("selected", function(d) {
-      return x(d.MONTH) >= extent[0][0]
-    })
-  }
+  // function brushed() {
+  //   let extent = d3.event.selection;
+  //   svg.selectAll("mybar").classed("selected", function(d) {
+  //     return x(d.MONTH) >= extent[0][0]
+  //   })
+  // }
 
   return svg;
 }
