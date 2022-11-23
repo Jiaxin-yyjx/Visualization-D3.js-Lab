@@ -20,15 +20,14 @@ function DrawBar(statename, bardata) {
       data.push(d);
     }
   });
-console.log(data);
 
-svg
-.append("g")
-// title
-.append("text")
-.text("2021 " + statename.name + " Monthly Electricity Generation")
-.attr("transform", "translate(100, -25)")
-.style("fill", "black");
+  svg
+    .append("g")
+    // title
+    .append("text")
+    .text("2021 " + statename.name + " Monthly Electricity Generation")
+    .attr("transform", "translate(100, -25)")
+    .style("fill", "black");
 
   // X axis
   var x = d3
@@ -79,16 +78,25 @@ svg
     })
     .attr("fill", "steelblue");
 
-  let brush = d3.brush().extent([[0, 0], [width, height]]).on("start", brushed).on("brush", brushed);
+  let brush = d3
+    .brush()
+    .extent([
+      [0, 0],
+      [width, height],
+    ])
+    .on("start", brushed)
+    .on("brush", brushed);
   svg.call(brush);
 
   function brushed() {
     let extent = d3.event.selection;
-    svg.selectAll("rect").classed("selected", function(d) {
-      return x(d.MONTH) >= extent[0][0] && 
-      x(d.MONTH) <= extent[1][0] && 
-      y(d.GENERATION) <= extent[1][1];
-    })
+    svg.selectAll("rect").classed("selected", function (d) {
+      return (
+        x(d.MONTH) >= extent[0][0] &&
+        x(d.MONTH) <= extent[1][0] &&
+        y(d.GENERATION) <= extent[1][1]
+      );
+    });
   }
 
   return svg;

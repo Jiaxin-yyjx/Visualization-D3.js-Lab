@@ -6,11 +6,12 @@ function DrawMap(topo, topo2, month_data, type_data) {
 
   topo.features.forEach(function (d) {
     topo2.forEach(function (c) {
-    if (d.properties.name == c.STATE) {
-      d["total"] = c.GENERATION;
-    }})
+      if (d.properties.name == c.STATE) {
+        d["total"] = c.GENERATION;
+      }
+    });
   });
-  
+
   let svg = d3
     .select("#map")
     .append("svg")
@@ -51,9 +52,15 @@ function DrawMap(topo, topo2, month_data, type_data) {
     Tooltip.style("opacity", 0);
     d3.selectAll(".State").transition().duration(200).style("opacity", 1);
   };
-  let mouseClick = function(d){
-    updatePage(d, month_data, type_data)
-  }
+  let mouseClick = function (d) {
+    d3.selectAll("path").style("stroke", "grey");
+    d3.select(this).style("stroke", "red");
+
+    let state = {};
+    state["code"] = d.id;
+    state["name"] = d.properties.name;
+    updatePage(state, month_data, type_data);
+  };
 
   // Draw the map
   svg
@@ -79,12 +86,12 @@ function DrawMap(topo, topo2, month_data, type_data) {
     .on("mousemove", mousemove)
     .on("mouseleave", mouseLeave)
     .on("click", mouseClick);
-    
-    let zoom = d3.zoom().scaleExtent([1, 5]).on("zoom", zoomed);
-    svg.call(zoom);
-    function zoomed() {
-      svg.selectAll("#just_map").attr("transform", d3.event.transform);
-    }
+
+  let zoom = d3.zoom().scaleExtent([1, 5]).on("zoom", zoomed);
+  svg.call(zoom);
+  function zoomed() {
+    svg.selectAll("#just_map").attr("transform", d3.event.transform);
+  }
 
   svg
     .append("g")
